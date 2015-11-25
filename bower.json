@@ -1,0 +1,20 @@
+{
+  "name": "js-co-op",
+  "version": "0.0.1",
+  "authors": [
+    "John Andersen <johnandersenpdx@gmail.com>"
+  ],
+  "description": "Peer to peer facilitator in javascript",
+  "license": "MIT",
+  "homepage": "pdxjohnny.github.io/js-co-op",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webrtc-adapter": "~0.2.5"
+  }
+}
