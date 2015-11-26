@@ -19,11 +19,11 @@ var activedc;
 
 var pc1icedone = false;
 
-var PeerCaller = function () {
+var P2PClient = function () {
   return this;
 };
 
-PeerCaller.prototype.createLocalOffer = function (offerReadyCallback) {
+P2PClient.prototype.createLocalOffer = function (offerReadyCallback) {
   console.log('called createLocalOffer');
     pc1.offerReadyCallback = offerReadyCallback;
     setupDC1();
@@ -33,18 +33,20 @@ PeerCaller.prototype.createLocalOffer = function (offerReadyCallback) {
     }, function () {console.warn("Couldn't create offer");});
 };
 
-PeerCaller.prototype.answerRecieved = function (answer) {
+P2PClient.prototype.answerRecieved = function (answer) {
   var answerDesc = new RTCSessionDescription(JSON.parse(answer));
   handleAnswerFromPC2(answerDesc);
 };
 
 // TESTING
 var t = document.getElementById('data');
-var test_caller = new PeerCaller();
+var test_caller = new P2PClient();
+var test_receiver = new P2PClient();
 test_caller.createLocalOffer(function (offer) {
-  t.value = JSON.stringify(offer);
-  handleOfferFromPC1(JSON.stringify(offer), function (answer) {
-    test_caller.answerRecieved(JSON.stringify(answer));
+  t.value = offer;
+  handleOfferFromPC1(offer, function (answer) {
+    t.value = answer;
+    test_caller.answerRecieved(answer);
   });
 });
 
@@ -142,7 +144,7 @@ pc1.onicecandidate = function (e) {
     console.log('Offer');
     console.log(JSON.stringify(pc1.localDescription));
     if (typeof pc1.offerReadyCallback === 'function') {
-      pc1.offerReadyCallback(pc1.localDescription);
+      pc1.offerReadyCallback(JSON.stringify(pc1.localDescription));
     }
   }
 };
@@ -246,9 +248,8 @@ function handleOfferFromPC1(offer, answerReadyCallback) {
 pc2.onicecandidate = function (e) {
     console.log("ICE candidate (pc2)", e);
     if (e.candidate == null){
-      $('#localAnswer').html(JSON.stringify(pc2.localDescription));
       if (typeof pc2.answerReadyCallback === 'function') {
-        pc2.answerReadyCallback(pc2.localDescription);
+        pc2.answerReadyCallback(JSON.stringify(pc2.localDescription));
       }
     }
 };
