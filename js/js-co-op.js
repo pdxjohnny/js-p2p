@@ -19,17 +19,13 @@ var activedc;
 
 var pc1icedone = false;
 
-$('#showLocalOffer').modal('show');
-$('#getRemoteAnswer').modal('hide');
-$('#waitForConnection').modal('hide');
-$('#createOrJoin').modal('show');
-
 var PeerCaller = function () {
   return this;
 };
 
-PeerCaller.prototype.createLocalOffer = function () {
+PeerCaller.prototype.createLocalOffer = function (offerReadyCallback) {
   console.log('called createLocalOffer');
+    pc1.offerReadyCallback = offerReadyCallback;
     setupDC1();
     pc1.createOffer(function (desc) {
         pc1.setLocalDescription(desc, function () {}, function () {});
@@ -37,43 +33,33 @@ PeerCaller.prototype.createLocalOffer = function () {
     }, function () {console.warn("Couldn't create offer");});
 };
 
-// TESTING
-var test_caller = new PeerCaller();
-test_caller.createLocalOffer();
-
-$('#joinBtn').click(function() {
-    $('#getRemoteOffer').modal('show');
-});
-
-$('#offerSentBtn').click(function() {
-    $('#getRemoteAnswer').modal('show');
-});
-
-$('#offerRecdBtn').click(function() {
-    var offer = $('#remoteOffer').val();
-    var offerDesc = new RTCSessionDescription(JSON.parse(offer));
-    console.log("Received remote offer", offerDesc);
-    writeToChatLog("Received remote offer", "text-success");
-    handleOfferFromPC1(offerDesc);
-    $('#showLocalAnswer').modal('show');
-});
-
-$('#answerSentBtn').click(function() {
-    $('#waitForConnection').modal('show');
-});
-
 PeerCaller.prototype.answerRecieved = function (answer) {
   var answerDesc = new RTCSessionDescription(JSON.parse(answer));
   handleAnswerFromPC2(answerDesc);
-  $('#waitForConnection').modal('show');
 };
 
-$('#fileBtn').change(function() {
-    var file = this.files[0];
-    console.log(file);
-
-    sendFile(file);
+// TESTING
+var t = document.getElementById('data');
+var test_caller = new PeerCaller();
+test_caller.createLocalOffer(function (offer) {
+  t.value = JSON.stringify(offer);
+  handleOfferFromPC1(JSON.stringify(offer), function (answer) {
+    test_caller.answerRecieved(JSON.stringify(answer));
+  });
 });
+
+// $('#offerRecdBtn').click(function() {
+//     var offer = $('#remoteOffer').val();
+//     var offerDesc = new RTCSessionDescription(JSON.parse(offer));
+//     console.log("Received remote offer", offerDesc);
+//     writeToChatLog("Received remote offer", "text-success");
+//     handleOfferFromPC1(offerDesc);
+//     $('#showLocalAnswer').modal('show');
+// });
+//
+// $('#answerSentBtn').click(function() {
+//     $('#waitForConnection').modal('show');
+// });
 
 function fileSent(file) {
   console.log('called fileSent');
@@ -155,6 +141,9 @@ pc1.onicecandidate = function (e) {
   if (e.candidate == null) {
     console.log('Offer');
     console.log(JSON.stringify(pc1.localDescription));
+    if (typeof pc1.offerReadyCallback === 'function') {
+      pc1.offerReadyCallback(pc1.localDescription);
+    }
   }
 };
 
@@ -242,8 +231,10 @@ pc2.ondatachannel = function (e) {
     };
 };
 
-function handleOfferFromPC1(offerDesc) {
+function handleOfferFromPC1(offer, answerReadyCallback) {
   console.log('called handleOfferFromPC1');
+    pc2.answerReadyCallback = answerReadyCallback;
+    var offerDesc = new RTCSessionDescription(JSON.parse(offer));
     pc2.setRemoteDescription(offerDesc);
     pc2.createAnswer(function (answerDesc) {
         writeToChatLog("Created local answer", "text-success");
@@ -254,8 +245,12 @@ function handleOfferFromPC1(offerDesc) {
 
 pc2.onicecandidate = function (e) {
     console.log("ICE candidate (pc2)", e);
-    if (e.candidate == null)
-       $('#localAnswer').html(JSON.stringify(pc2.localDescription));
+    if (e.candidate == null){
+      $('#localAnswer').html(JSON.stringify(pc2.localDescription));
+      if (typeof pc2.answerReadyCallback === 'function') {
+        pc2.answerReadyCallback(pc2.localDescription);
+      }
+    }
 };
 
 pc2.onsignalingstatechange = onsignalingstatechange;
