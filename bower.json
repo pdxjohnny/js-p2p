@@ -1,12 +1,12 @@
 {
-  "name": "js-co-op",
+  "name": "p2p",
   "version": "0.0.1",
   "authors": [
     "John Andersen <johnandersenpdx@gmail.com>"
   ],
   "description": "Peer to peer facilitator in javascript",
   "license": "MIT",
-  "homepage": "pdxjohnny.github.io/js-co-op",
+  "homepage": "pdxjohnny.github.io/js-p2p",
   "ignore": [
     "**/.*",
     "node_modules",
