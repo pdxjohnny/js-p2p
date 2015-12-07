@@ -148,6 +148,23 @@ P2PClient.prototype.handleAnswer = function (answerDesc) {
   this.conn.setRemoteDescription(answerDesc);
 }
 
+P2PClient.prototype.handleOffer = function (offer) {
+  console.log('called handleOffer');
+  if (typeof offer === 'string') {
+    offer = JSON.parse(offer);
+  }
+  var offerDesc = new RTCSessionDescription(offer);
+  this.conn.setRemoteDescription(offerDesc);
+  console.log(offerDesc);
+  this.conn.createAnswer(function (answerDesc) {
+    writeToChatLog("Created local answer", "text-success");
+    console.log("Created local answer: ", answerDesc);
+    this.conn.setLocalDescription(answerDesc);
+  }.bind(this), function (err) {
+    console.warn("No create answer", err);
+  }.bind(this));
+}
+
 function handleCandidateFromPC2(iceCandidate) {
   console.log('called handleCandidateFromPC2');
   this.conn.addIceCandidate(iceCandidate);
@@ -176,8 +193,8 @@ var test_caller = new P2PClient();
 var test_receiver = new P2PClient();
 test_caller.offer(function (offer) {
   t.value = offer;
-  // handleOfferFromPC1(offer, function (answer) {
-  //   t.value = answer;
-  //   test_caller.answerRecieved(answer);
-  // });
+  test_receiver.handleOffer(offer, function (answer) {
+    t.value = answer;
+    test_caller.answerRecieved(answer);
+  });
 });
