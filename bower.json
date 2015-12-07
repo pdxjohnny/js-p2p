@@ -1,11 +1,12 @@
 {
   "name": "p2p",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "authors": [
     "John Andersen <johnandersenpdx@gmail.com>"
   ],
   "description": "Peer to peer facilitator in javascript",
   "license": "MIT",
+  "main": "js/p2p.js",
   "homepage": "pdxjohnny.github.io/js-p2p",
   "ignore": [
     "**/.*",
