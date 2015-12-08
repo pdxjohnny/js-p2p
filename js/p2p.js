@@ -1,6 +1,10 @@
+if (typeof require === 'function') {
+  var NodeJSWebrtcModule = require('wrtc');
+}
+
 var P2Pconfig = {
   'iceServers': [{
-    'url': 'stun:23.21.150.121'
+    'url': 'stun:stun.l.google.com:19302'
   }]
 };
 var P2Pconfig2 = {
@@ -9,8 +13,17 @@ var P2Pconfig2 = {
   }]
 };
 
+var P2PWebRTC = {};
+if (typeof NodeJSWebrtcModule === 'object') {
+  P2PWebRTC.RTCSessionDescription = NodeJSWebrtcModule.RTCSessionDescription;
+  P2PWebRTC.RTCPeerConnection = NodeJSWebrtcModule.RTCPeerConnection;
+} else {
+  P2PWebRTC.RTCSessionDescription = RTCSessionDescription;
+  P2PWebRTC.RTCPeerConnection = RTCPeerConnection;
+}
+
 var P2PClient = function () {
-  this.conn = new RTCPeerConnection(P2Pconfig, P2Pconfig2);
+  this.conn = new P2PWebRTC.RTCPeerConnection(P2Pconfig, P2Pconfig2);
   this.conn.ondatachannel = this.setupdatachannel.bind(this);
   this.conn.onicecandidate = this.onicecandidate.bind(this);
   this.conn.onconnection = this.onconnection.bind(this);
@@ -40,7 +53,7 @@ P2PClient.prototype.answerRecieved = function (answer) {
   if (typeof answer === 'string') {
     answer = JSON.parse(answer);
   }
-  var answerDesc = new RTCSessionDescription(answer);
+  var answerDesc = new P2PWebRTC.RTCSessionDescription(answer);
   this.handleAnswer(answerDesc);
 };
 
@@ -49,7 +62,7 @@ P2PClient.prototype.setupdatachannel = function (event) {
     this.datachannel = event.channel || event;
   }
   try {
-    this.datachannel.onopen = function (e) {
+    this.datachannel.onopen = function (data) {
       if (typeof this.onconnect === 'function') {
         this.onconnect(data);
       }
@@ -111,7 +124,7 @@ P2PClient.prototype.handleOffer = function (offer, answerReadyCallback) {
   if (typeof offer === 'string') {
     offer = JSON.parse(offer);
   }
-  var offerDesc = new RTCSessionDescription(offer);
+  var offerDesc = new P2PWebRTC.RTCSessionDescription(offer);
   this.conn.setRemoteDescription(offerDesc, function () {
     this.conn.createAnswer(function (answerDesc) {
       this.conn.setLocalDescription(answerDesc);
@@ -120,3 +133,9 @@ P2PClient.prototype.handleOffer = function (offer, answerReadyCallback) {
     }.bind(this));
   }.bind(this));
 };
+
+if (typeof module === 'object') {
+  module.exports = {
+    Client: P2PClient
+  };
+}

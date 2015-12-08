@@ -1,0 +1,32 @@
+{
+  "name": "wrtc-p2p",
+  "version": "0.0.4",
+  "description": "Peer to peer with wrtc",
+  "main": "js/p2p.js",
+  "files": [
+    "js/p2p.js"
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test/node.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdxjohnny/js-p2p.git"
+  },
+  "keywords": [
+    "webrtc",
+    "peer-to-peer"
+  ],
+  "author": "John Andersen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pdxjohnny/js-p2p/issues"
+  },
+  "homepage": "https://github.com/pdxjohnny/js-p2p#readme",
+  "dependencies": {
+    "wrtc": ">=0.0.59"
+  }
+}
