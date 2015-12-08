@@ -1,12 +1,12 @@
 {
-  "name": "p2p",
-  "version": "0.0.5",
+  "name": "example",
+  "version": "0.0.1",
   "authors": [
     "John Andersen <johnandersenpdx@gmail.com>"
   ],
-  "description": "Peer to peer facilitator in javascript",
+  "description": "p2p examples",
   "license": "MIT",
-  "main": "js/p2p.js",
+  "main": "index.js",
   "homepage": "pdxjohnny.github.io/js-p2p",
   "ignore": [
     "**/.*",
@@ -18,6 +18,6 @@
     "index.html"
   ],
   "dependencies": {
-    "webrtc-adapter": "~0.2.5"
+    "p2p": null
   }
 }

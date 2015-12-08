@@ -1,20 +1,20 @@
 {
-  "name": "wrtc-p2p",
+  "name": "wrtc-p2p-example",
   "version": "0.0.5",
   "description": "Peer to peer with wrtc",
-  "main": "js/p2p.js",
+  "main": "index.js",
   "files": [
-    "js/p2p.js"
+    "index.js"
   ],
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "node test/node.js"
+    "test": "node test/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pdxjohnny/js-p2p.git"
+    "url": "git+https://github.com/pdxjohnny/js-p2p-example.git"
   },
   "keywords": [
     "webrtc",
@@ -23,10 +23,10 @@
   "author": "John Andersen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pdxjohnny/js-p2p/issues"
+    "url": "https://github.com/pdxjohnny/js-p2p-example/issues"
   },
-  "homepage": "https://github.com/pdxjohnny/js-p2p#readme",
+  "homepage": "https://github.com/pdxjohnny/js-p2p-example#readme",
   "dependencies": {
-    "wrtc": ">=0.0.59"
+    "wrtc-p2p": "*"
   }
 }

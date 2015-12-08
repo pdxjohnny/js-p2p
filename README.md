@@ -7,7 +7,7 @@ This package will work with nodejs or browser javascript.
 Examples
 ---
 
-<script src="https://gist.github.com/pdxjohnny/442dfd1bae46ce90840c.js"></script>
+See examples folder
 
 
 Credits
