@@ -1,6 +1,6 @@
 {
   "name": "wrtc-p2p",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Peer to peer with wrtc",
   "main": "js/p2p.js",
   "files": [

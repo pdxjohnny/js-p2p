@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/pdxjohnny/js-p2p-example#readme",
   "dependencies": {
+    "readline-sync": "^1.2.21",
     "wrtc-p2p": "*"
   }
 }
