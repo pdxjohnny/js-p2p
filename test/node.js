@@ -7,7 +7,7 @@ var test_receiver = new p2p.Client();
 
 var checkNeeded = function () {
   have++;
-  console.log(have, 'responses recived');
+  console.log(have, 'responses received');
   if (have >= needed) {
     console.log('Got all responses, test complete');
     process.exit(0);
